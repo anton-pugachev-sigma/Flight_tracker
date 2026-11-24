@@ -6,7 +6,7 @@
 ## Установка
 #### Клонируйте репозиторий:
 ```bash
-git clone https://github.com/anton-pugachev-sigma/Online_store_project
+git clone https://github.com/anton-pugachev-sigma/Flight_tracker
 ```
 
 #### Установите poetry:
