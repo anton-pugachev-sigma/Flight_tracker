@@ -64,6 +64,24 @@ class Airplane(BasePlanes):
         self.__high_m = high_m
         self.__speed = speed
 
+    def __str__(self):
+        return f"{self.callsign} | {self.country} | {self.high_m} | {self.speed}"
+
+    def __lt__(self, other):
+        if not isinstance(other, Airplane):
+            return NotImplemented
+        return self.__high_m < other.high_m
+
+    def __gt__(self, other):
+        if not isinstance(other, Airplane):
+            return NotImplemented
+        return self.__high_m > other.high_m
+
+    def __eq__(self, other):
+        if not isinstance(other, Airplane):
+            return NotImplemented
+        return self.__high_m == other.high_m
+
     @property
     def callsign(self):
         return self.__callsign
@@ -105,7 +123,7 @@ class Airplane(BasePlanes):
 
     @classmethod
     def cast_to_object_list(cls, planes_data: dict[str, Any]) -> list:
-        list_planes = planes_data["states"]
+        list_planes = planes_data.get("states") or []
 
         planes = []
 
