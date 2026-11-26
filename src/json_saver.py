@@ -14,7 +14,14 @@ class BaseFileSaver(ABC):
         pass
 
     @abstractmethod
-    def get_filtered_data(self, *, args):
+    def get_filtered_data(
+        self,
+        *,
+        callsign: str | None = None,
+        country: str | None = None,
+        high_m: float | None = None,
+        speed: float | None = None,
+    ) -> list[dict[str, Any]]:
         pass
 
     @abstractmethod
@@ -23,11 +30,15 @@ class BaseFileSaver(ABC):
 
 
 class JsonFileSaver(BaseFileSaver):
-    way: str
+    __way: str
     base_path = get_root() / "data" / "planes.json"
 
     def __init__(self, way: str = base_path) -> None:
-        self.way = way
+        self.__way = way
+
+    @property
+    def way(self):
+        return self.__way
 
     def read_data(self):
         try:
@@ -41,6 +52,8 @@ class JsonFileSaver(BaseFileSaver):
         return planes_list
 
     def insert_info_plane(self, plane: Airplane) -> None:
+        if not isinstance(plane, Airplane):
+            raise TypeError
         planes_list = self.read_data()
         planes_list.append(plane.become_to_dict())
         with open(self.way, "w", encoding="UTF-8") as file:
@@ -84,7 +97,18 @@ class JsonFileSaver(BaseFileSaver):
         return filtered_planes
 
     def delete_info_plane(self, plane: Airplane):
-        pass
+        if not isinstance(plane, Airplane):
+            raise TypeError
+        planes_list = self.read_data()
+        len_start = len(planes_list)
+        plane_dict = plane.become_to_dict()
+
+        planes_list = [plan for plan in planes_list if plan != plane_dict]
+        len_end = len(planes_list)
+
+        if len_start != len_end:
+            with open(self.way, "w", encoding="UTF-8") as file:
+                file.write(json.dumps(planes_list, ensure_ascii=False, indent=4))
 
 
 # a  = JsonFileSaver()
