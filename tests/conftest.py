@@ -2,6 +2,8 @@ from typing import Any
 
 import pytest
 
+from src.airplanes import Airplane
+
 
 @pytest.fixture
 def get_info_plane() -> dict[str, Any]:
@@ -89,4 +91,20 @@ def get_cord() -> list[dict[str, Any]]:
             "place_rank": 4,
             "type": "administrative",
         }
+    ]
+
+
+@pytest.fixture
+def get_plane() -> Airplane:
+    return Airplane("SWR438A", "USA", 4000.0, 200.0)
+
+
+@pytest.fixture
+def get_planes_json() -> list[dict[str, Any]]:
+    return [
+        {"callsign": "SWR438A", "country": "USA", "high_m": 420.0, "speed": 200.0},
+        {"callsign": "SWR438A", "country": "Russia", "high_m": 420.0, "speed": 210.0},
+        {"callsign": "SWR438A", "country": "Russia", "high_m": 420.0, "speed": 200.0},
+        {"callsign": "SWR438A", "country": "UK", "high_m": 420.0, "speed": 4000.0},
+        {"callsign": "SWR438A", "country": "USA", "high_m": 4000.0, "speed": 200.0},
     ]

@@ -104,7 +104,7 @@ class Airplane(BasePlanes):
         return self.high_m > other.high_m
 
     @classmethod
-    def cast_to_object_list(cls, planes_data: dict[str, Any]):
+    def cast_to_object_list(cls, planes_data: dict[str, Any]) -> list:
         list_planes = planes_data["states"]
 
         planes = []
@@ -114,3 +114,12 @@ class Airplane(BasePlanes):
             plane = cls(data[1], data[2], data[7], data[9])
             planes.append(plane)
         return planes
+
+    def become_to_dict(self) -> dict[str, Any]:
+        plane_dict = {
+            "callsign": self.__callsign,
+            "country": self.__country,
+            "high_m": self.__high_m,
+            "speed": self.__speed,
+        }
+        return plane_dict
