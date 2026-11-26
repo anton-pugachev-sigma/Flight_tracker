@@ -1,6 +1,5 @@
 import json
 from abc import ABC, abstractmethod
-from typing import Any
 
 from src.airplanes import Airplane
 from src.get_root import get_root
@@ -21,7 +20,7 @@ class BaseFileSaver(ABC):
         country: str | None = None,
         high_m: float | None = None,
         speed: float | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[Airplane]:
         pass
 
     @abstractmethod
@@ -30,6 +29,8 @@ class BaseFileSaver(ABC):
 
 
 class JsonFileSaver(BaseFileSaver):
+    """Класс для работы с информацией о самолетах в json файле"""
+
     __way: str
     base_path = get_root() / "data" / "planes.json"
 
@@ -66,7 +67,7 @@ class JsonFileSaver(BaseFileSaver):
         country: str | None = None,
         high_m: float | None = None,
         speed: float | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[Airplane]:
 
         planes = self.read_data()
         filtered_planes = planes
@@ -94,7 +95,8 @@ class JsonFileSaver(BaseFileSaver):
                 plane for plane in filtered_planes if plane["speed"] == speed
             ]
 
-        return filtered_planes
+        final_planes = [Airplane(**plane) for plane in filtered_planes]
+        return final_planes
 
     def delete_info_plane(self, plane: Airplane):
         if not isinstance(plane, Airplane):

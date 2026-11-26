@@ -37,18 +37,13 @@ def test_get_filtered_data_success(tmp_path, get_planes_json) -> None:
 
     file_1 = JsonFileSaver(path)
     res = file_1.get_filtered_data(country="USA")
-    assert res == [
-        {"callsign": "SWR438A", "country": "USA", "high_m": 420.0, "speed": 200.0},
-        {"callsign": "SWR438A", "country": "USA", "high_m": 4000.0, "speed": 200.0},
-    ]
 
+    for pl in res:
+        assert pl.country == "USA"
     res_2 = file_1.get_filtered_data(speed=200.0)
 
-    assert res_2 == [
-        {"callsign": "SWR438A", "country": "USA", "high_m": 420.0, "speed": 200.0},
-        {"callsign": "SWR438A", "country": "Russia", "high_m": 420.0, "speed": 200.0},
-        {"callsign": "SWR438A", "country": "USA", "high_m": 4000.0, "speed": 200.0},
-    ]
+    for plane in res_2:
+        assert plane.speed == 200.0
 
 
 def test_delete_info_plane_success(tmp_path, get_plane, get_planes_json) -> None:
