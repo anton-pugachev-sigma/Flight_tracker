@@ -1,5 +1,6 @@
 import json
 from abc import ABC, abstractmethod
+from typing import Any
 
 from src.airplanes import Airplane
 from src.get_root import get_root
@@ -13,7 +14,7 @@ class BaseFileSaver(ABC):
         pass
 
     @abstractmethod
-    def get_filtered_data(self, filtered_list: list):
+    def get_filtered_data(self, *, args):
         pass
 
     @abstractmethod
@@ -28,7 +29,7 @@ class JsonFileSaver(BaseFileSaver):
     def __init__(self, way: str = base_path) -> None:
         self.way = way
 
-    def insert_info_plane(self, plane: Airplane) -> None:
+    def read_data(self):
         try:
             with open(self.way, "r", encoding="UTF-8") as file:
                 planes_list = json.load(file)
@@ -37,20 +38,57 @@ class JsonFileSaver(BaseFileSaver):
 
         except json.JSONDecodeError:
             planes_list = []
+        return planes_list
 
+    def insert_info_plane(self, plane: Airplane) -> None:
+        planes_list = self.read_data()
         planes_list.append(plane.become_to_dict())
         with open(self.way, "w", encoding="UTF-8") as file:
             file.write(json.dumps(planes_list, ensure_ascii=False, indent=4))
 
-    def get_filtered_data(self, filtered_list: list):
-        pass
+    def get_filtered_data(
+        self,
+        *,
+        callsign: str | None = None,
+        country: str | None = None,
+        high_m: float | None = None,
+        speed: float | None = None,
+    ) -> list[dict[str, Any]]:
+
+        planes = self.read_data()
+        filtered_planes = planes
+        if callsign is not None:
+            filtered_planes = [
+                plane
+                for plane in filtered_planes
+                if plane["callsign"].lower() == callsign.lower()
+            ]
+
+        if country is not None:
+            filtered_planes = [
+                plane
+                for plane in filtered_planes
+                if plane["country"].lower() == country.lower()
+            ]
+
+        if high_m is not None:
+            filtered_planes = [
+                plane for plane in filtered_planes if plane["high_m"] == high_m
+            ]
+
+        if speed is not None:
+            filtered_planes = [
+                plane for plane in filtered_planes if plane["speed"] == speed
+            ]
+
+        return filtered_planes
 
     def delete_info_plane(self, plane: Airplane):
         pass
 
 
 # a  = JsonFileSaver()
-# plane_a = Airplane("SWR438A", "USA", 420.0, 200.0)
+# plane_a = Airplane("SWR438A", "UK", 420.0, 4000.0)
 # a.insert_info_plane(plane_a)
 # path = get_root() / 'data' / 'planes.json'
 # with open(path, 'r', encoding='Utf-8') as file:
