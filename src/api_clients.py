@@ -37,8 +37,8 @@ class APIPlanes(APIClient):
         cords = self.get_cords(country)
         params = {
             "lamin": cords[0],
-            "lomin": cords[1],
-            "lamax": cords[2],
+            "lomin": cords[2],
+            "lamax": cords[1],
             "lomax": cords[3],
         }
 

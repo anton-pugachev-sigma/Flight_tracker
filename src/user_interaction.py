@@ -41,7 +41,6 @@ def user_interaction():
         print(country_plane)
 
 
-user_interaction()
 
 
 # filtered_aeroplanes = filter_aeroplanes(aeroplanes, filter_words)

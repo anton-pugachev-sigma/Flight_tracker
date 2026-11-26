@@ -35,21 +35,20 @@ class Airplane(BasePlanes):
         if not isinstance(callsign, str):
             raise TypeError
 
-        if not callsign.strip():
-            raise ValueError
-
+        if callsign is None or not callsign.strip():
+           callsign = 'Неизвестно'
         if not isinstance(country, str):
             raise TypeError
 
         if high_m is None or high_m < 0:
             high_m = 0.0
-        if not isinstance(high_m, float):
+        if not isinstance(high_m, (int, float)):
             raise TypeError
 
         if speed is None:
             speed = 0.0
 
-        if not isinstance(speed, float):
+        if not isinstance(speed, (int, float)):
             raise TypeError
         return callsign, country, high_m, speed
 
